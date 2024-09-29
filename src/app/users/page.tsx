@@ -11,6 +11,8 @@ import * as XLSX from 'xlsx';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ArticleIcon from '@mui/icons-material/Article';
 
+import { CircularProgress } from '@mui/material';
+
 interface User {
     id: number;
     name: string;
@@ -28,6 +30,25 @@ export default function UsersPage() {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [{ data: users = [], loading, error }, refetch] = useAxios<User[]>('/api/user');
+
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (error) {
+        return <p>Ocorreu um erro ao carregar os dados.</p>;
+    }
 
     const handleClickOpen = (id: number) => {
         setUserIdToDelete(id);
@@ -91,7 +112,7 @@ export default function UsersPage() {
     };
 
     if (loading) return <p>Carregando...</p>;
-    if (error) return <p>{error.message}</p>;
+    
 
     return (
         <main className=" mt-[2.30rem] flex flex-col items-center sm:items-start">

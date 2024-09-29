@@ -17,10 +17,10 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ open, title, message, onC
                 <DialogContentText>{message}</DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel} color="primary">
+                <Button onClick={onCancel} sx={{ color: 'black' }}>
                     Cancelar
                 </Button>
-                <Button onClick={onConfirm} color="secondary">
+                <Button onClick={onConfirm} color="primary">
                     Confirmar
                 </Button>
             </DialogActions>
