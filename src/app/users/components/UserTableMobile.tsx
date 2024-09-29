@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Card, CardContent, Typography, IconButton, Avatar, Grid } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -37,36 +36,25 @@ const UserTableMobile: React.FC<UserTableMobileProps> = ({ users, handleDelete }
                                 </Avatar>
                             </Grid>
                             <Grid item xs>
-                                <Typography variant="h6" component="div">
-                                    {user.name}
-                                </Typography>
-                                <Typography color="textSecondary">
-                                    {user.email}
-                                </Typography>
-                                <Typography color="textSecondary">
-                                    {user.phone}
-                                </Typography>
+                                <Typography variant="h6">{user.name}</Typography>
+                                <Typography color="textSecondary">{user.email}</Typography>
+                                <Typography color="textSecondary">{user.phone}</Typography>
+                                <Typography color="textSecondary">{user.birthDate}</Typography>
+                                <Typography color="textSecondary">{user.role}</Typography>
                             </Grid>
                             <Grid item>
                                 <Link href={`/users/${user.id}/edit`}>
-                                    <IconButton color="primary">
+                                    <IconButton color="primary" sx={{ backgroundColor: 'transparent', boxShadow: 'none', color: 'black' }} >
                                         <EditIcon />
                                     </IconButton>
                                 </Link>
-                                <IconButton
-                                    color="secondary"
-                                    onClick={() => handleDelete(user.id)}
+                                <IconButton color="secondary" onClick={() => handleDelete(user.id)}
+                                    sx={{ backgroundColor: 'transparent', boxShadow: 'none', color: 'red' }}
                                 >
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
                         </Grid>
-                        <Typography color="textSecondary" className="mt-2">
-                            <strong>Data de Nascimento:</strong> {user.birthDate}
-                        </Typography>
-                        <Typography color="textSecondary">
-                            <strong>Cargo:</strong> {user.role}
-                        </Typography>
                     </CardContent>
                 </Card>
             ))}
