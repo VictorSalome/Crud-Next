@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, TablePagination } from '@mui/material';
-import Link from 'next/link';
-import EditIcon from '@mui/icons-material/Edit';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, TablePagination, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Snackbar, Alert } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import EditIcon from '@mui/icons-material/Edit';
+import EditUserPage from './EditUser';
 
 interface User {
     id: number;
@@ -22,9 +21,24 @@ interface UserTableWebProps {
 const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [open, setOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [editingUser, setEditingUser] = useState<User | null>(null); // Estado para manter o usuário que está sendo editado
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setEditingUser(null); // Reseta o usuário em edição
+    };
+
+    const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,14 +46,19 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
         setPage(0);
     };
 
+    const handleClickOpen = (user: User) => {
+        setEditingUser(user); // Define o usuário em edição
+        setOpen(true); // Abre o modal
+    };
 
-
-
+    const handleSaveUser = () => {
+        // Lógica para salvar o usuário editado aqui
+        setOpen(false);
+        setOpenSnackbar(true); // Exibe o Snackbar ao salvar o usuário
+    };
 
     return (
-
         <>
-
             <TableContainer component={Paper} sx={{ padding: '1rem' }}>
                 <Table>
                     <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
@@ -54,7 +73,7 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
+                        {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
                             <TableRow key={user.id}>
                                 <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.name}</TableCell>
@@ -64,11 +83,16 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
                                 <TableCell>{user.role}</TableCell>
                                 <TableCell>
                                     <div className="flex justify-around ">
-                                        <Link href={`/users/${user.id}/edit`}>
-                                            <Button variant="contained" color="inherit" className="mr-2" sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
-                                                <EditIcon />
-                                            </Button>
-                                        </Link>
+                                        <Button
+                                            variant="contained"
+                                            color="inherit"
+                                            className="mr-2"
+                                            sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}
+                                            onClick={() => handleClickOpen(user)}
+                                        >
+                                            <EditIcon />
+                                        </Button>
+
                                         <Button
                                             variant="contained"
                                             color="secondary"
@@ -94,8 +118,27 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </TableContainer>
-        </>
 
+            {/* Modal de edição de usuário */}
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Editar Usuário</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Atualize as informações do usuário abaixo:</DialogContentText>
+                    <EditUserPage/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancelar</Button>
+                    <Button onClick={handleSaveUser} color="primary">Salvar</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Snackbar de sucesso */}
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    {editingUser ? 'Usuário editado com sucesso.' : 'Usuário cadastrado com sucesso.'}
+                </Alert>
+            </Snackbar>
+        </>
     );
 };
 
