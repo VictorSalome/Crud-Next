@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, TablePagination, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Snackbar, Alert } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination, Dialog, DialogActions, DialogContent, Snackbar, Alert } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import EditUserPage from './EditUser';
+import EditUserPageModal from './EditUser'; // Importando corretamente o modal
+
+
 
 interface User {
     id: number;
@@ -23,7 +25,7 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [editingUser, setEditingUser] = useState<User | null>(null); // Estado para manter o usuário que está sendo editado
+    const [editingUser, setEditingUser] = useState<User | null>(null); // Estado para o usuário em edição
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -51,10 +53,9 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
         setOpen(true); // Abre o modal
     };
 
-    const handleSaveUser = () => {
-        // Lógica para salvar o usuário editado aqui
-        setOpen(false);
-        setOpenSnackbar(true); // Exibe o Snackbar ao salvar o usuário
+    const handleSuccessUpdate = () => {
+        setOpen(false); // Fecha o modal
+        setOpenSnackbar(true); // Exibe o Snackbar de sucesso
     };
 
     return (
@@ -121,21 +122,25 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
 
             {/* Modal de edição de usuário */}
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Editar Usuário</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Atualize as informações do usuário abaixo:</DialogContentText>
-                    <EditUserPage/>
+                    {editingUser && (
+                        <EditUserPageModal
+                            user={editingUser} 
+                            open={open} 
+                            onClose={handleClose} 
+                            onSuccess={handleSuccessUpdate} 
+                        />
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancelar</Button>
-                    <Button onClick={handleSaveUser} color="primary">Salvar</Button>
                 </DialogActions>
             </Dialog>
 
             {/* Snackbar de sucesso */}
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                    {editingUser ? 'Usuário editado com sucesso.' : 'Usuário cadastrado com sucesso.'}
+                    Usuário atualizado com sucesso!
                 </Alert>
             </Snackbar>
         </>

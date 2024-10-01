@@ -39,18 +39,14 @@ export default function AddUser({ onSuccess }: AddUserProps) {
             await axios.post('/api/user', data);
             setOpenSnackbar(true);
             reset();
-
-
-            setTimeout(() => {
-                onSuccess();
-            });
+            // Chama onSuccess diretamente após o cadastro
+            onSuccess();
         } catch (err) {
             setError('Erro ao realizar cadastro.');
         } finally {
             setLoading(false);
         }
     };
-
 
     return (
         <Container component="main" maxWidth="sm">
