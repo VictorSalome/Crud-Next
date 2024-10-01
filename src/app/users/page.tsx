@@ -22,7 +22,7 @@ export default function UsersPage() {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isMobile, setIsMobile] = useState(false);
-    
+
     const theme = useTheme();
 
     // Verifica se a tela é mobile
@@ -107,8 +107,8 @@ export default function UsersPage() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleMenuClose}
                             >
-                                <MenuItem onClick={handleMenuClose}>Gerar PDF</MenuItem>
-                                <MenuItem onClick={handleMenuClose}>Gerar Excel</MenuItem>
+                                <GeneratePDF users={users} />
+                                <GenerateExcel users={users} />
                             </Menu>
                         </>
                     ) : (
