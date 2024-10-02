@@ -75,7 +75,10 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
                     </TableHead>
                     <TableBody>
                         {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
-                            <TableRow key={user.id}>
+                            <TableRow
+                                key={user.id}
+                                sx={{ '&:hover': { backgroundColor: '#f0f0f0' } }} // Adicionando o efeito de hover
+                            >
                                 <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
@@ -107,6 +110,7 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
                             </TableRow>
                         ))}
                     </TableBody>
+
                 </Table>
                 <TablePagination
                     component="div"
@@ -125,10 +129,10 @@ const UserTableWeb: React.FC<UserTableWebProps> = ({ users, handleDelete }) => {
                 <DialogContent>
                     {editingUser && (
                         <EditUserPageModal
-                            user={editingUser} 
-                            open={open} 
-                            onClose={handleClose} 
-                            onSuccess={handleSuccessUpdate} 
+                            user={editingUser}
+                            open={open}
+                            onClose={handleClose}
+                            onSuccess={handleSuccessUpdate}
                         />
                     )}
                 </DialogContent>

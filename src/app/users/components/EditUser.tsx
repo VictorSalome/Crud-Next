@@ -54,11 +54,10 @@ const EditUserPageModal: React.FC<EditUserPageModalProps> = ({ user, open, onClo
 
             // Fecha o modal ou redireciona
             setTimeout(() => {
-                onClose(); // Fecha o modal após o sucesso
+                window.location.reload();
             }, 500);
         } catch (err) {
             setError('Erro ao atualizar usuário.');
-            console.error(err); // Para depuração
         } finally {
             setLoading(false);
         }
@@ -101,13 +100,7 @@ const EditUserPageModal: React.FC<EditUserPageModalProps> = ({ user, open, onClo
                     <input
                         id="email"
                         className="shadow-md border rounded-xl w-full h-12 py-2 px-3"
-                        {...register('email', {
-                            required: 'Email é obrigatório',
-                            pattern: {
-                                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: 'Email inválido'
-                            }
-                        })}
+                        {...register('email', { required: 'Email é obrigatório' })}
                     />
                     {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
@@ -139,7 +132,10 @@ const EditUserPageModal: React.FC<EditUserPageModalProps> = ({ user, open, onClo
                         color="primary"
                         sx={{ mt: 2, width: '100%' }}
                         disabled={loading}
+
+
                     >
+
                         {loading ? 'Salvando...' : 'Salvar'}
                     </Button>
                 </form>
@@ -147,5 +143,7 @@ const EditUserPageModal: React.FC<EditUserPageModalProps> = ({ user, open, onClo
         </Modal>
     );
 };
+
+
 
 export default EditUserPageModal;
